@@ -1,0 +1,41 @@
+---
+slug: coffee-sales-excel
+title: Coffee Sales Analysis in Excel
+outcome: An interactive sales dashboard built from three raw tables, with no add-ins.
+featured: false
+tags:
+  - Excel
+  - BI & Dashboards
+stack:
+  - Excel
+  - PivotTables
+  - slicers
+  - lookups
+repo: https://github.com/Bibententen/Projects/tree/main/Excel%20Coffee%20Sales%20Analysis
+glance:
+  problemType: Sales dashboarding
+  dataset: "Three raw tables: orders, customers and products"
+  bestModel: Pivot-backed Excel dashboard
+  headline: Four linked views driven by a timeline and three slicers
+---
+
+## The problem
+
+The goal was to turn raw coffee sales tables into an interactive dashboard that could be explored without add-ins.
+
+## The data
+
+The workbook contains three source tables — `orders`, `customers` and `products` — joined with lookups.
+
+## The approach
+
+The `Dashboard` sheet is driven by three pivot-backed views: `TotalSales` over time, `CountryBarChart` and `Top5Customers`. A date timeline controls the period, while slicers cover loyalty-card status, roast type and pack size.
+
+## Results
+
+The result is an interactive dashboard with a timeline plus three slicers driving four linked views. That is real dashboard modelling thinking, just in Excel: cleaning, pivots, dashboarding and linked controls.
+
+## What I would do differently
+
+- I would export screenshots of the dashboard with the slicers in different states when those assets are available.
+- I would keep the workbook structure visible as evidence of the modelling work behind the dashboard.
