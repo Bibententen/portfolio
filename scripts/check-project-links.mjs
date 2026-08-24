@@ -15,14 +15,35 @@ const urls = files.flatMap((file) => {
   return match ? [{ file, url: match[1] }] : [];
 });
 
+function githubContentsApiUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split("/").filter(Boolean);
+    if (
+      parsed.hostname !== "github.com" ||
+      parts[2] !== "blob" ||
+      parts.length < 5
+    )
+      return null;
+    const [owner, repository, , ref, ...fileParts] = parts;
+    const encodedPath = fileParts
+      .map((part) => encodeURIComponent(part))
+      .join("/");
+    return `https://api.github.com/repos/${owner}/${repository}/contents/${encodedPath}?ref=${encodeURIComponent(ref)}`;
+  } catch {
+    return null;
+  }
+}
+
 const failures = [];
 for (const item of urls) {
-  let response = await fetch(item.url, {
-    method: "HEAD",
+  const apiUrl = headers ? githubContentsApiUrl(item.url) : null;
+  let response = await fetch(apiUrl ?? item.url, {
+    ...(apiUrl ? {} : { method: "HEAD" }),
     headers,
     redirect: "follow",
   });
-  if (!response.ok)
+  if (!apiUrl && !response.ok)
     response = await fetch(item.url, { headers, redirect: "follow" });
   if (!response.ok)
     failures.push(`${item.file}: ${item.url} (${response.status})`);
