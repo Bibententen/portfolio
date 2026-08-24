@@ -1,6 +1,6 @@
 # Portfolio build report
 
-Status: complete on `main`, published to the private [Bibententen/portfolio](https://github.com/Bibententen/portfolio) repository, and deployed to Vercel production at [charlie-pham-ruddy.vercel.app](https://charlie-pham-ruddy.vercel.app). Production still uses the direct Vercel Drop flow; the GitHub repository is available for source control and can be connected to Vercel later.
+Status: complete on `main`, published to the private [Bibententen/portfolio](https://github.com/Bibententen/portfolio) repository, and deployed to Vercel production at [charlie-pham-ruddy.vercel.app](https://charlie-pham-ruddy.vercel.app). The Vercel project is now connected to GitHub so future pushes to `main` create deployments.
 
 ## Phase results
 
@@ -14,7 +14,7 @@ Status: complete on `main`, published to the private [Bibententen/portfolio](htt
 | P5 contact backend | Green locally | Honeypot regression passed; Server Action, rate limit, Turnstile verification, Zod validation and Resend isolation build cleanly. Live delivery remains blocked by missing secrets. |
 | P6 SEO + resume | Green locally | Canonicals, JSON-LD, sitemap, robots, OG routes, CI link checker and the Data Analyst CV download route passed. A final static HTML audit confirmed the Projects grid remains present without JavaScript. |
 | P8 launch | Green with follow-up | Production deployment succeeded after upgrading the listed `next-mdx-remote` dependency from 5.0.0 to 6.0.0 for Vercel's security check. The public home, About, Projects, Contact and Resume routes render; sitemap and robots return 200. Search Console, LinkedIn update, live contact delivery and final content sign-off remain for Charlie. |
-| P9 data-role refresh | Green | Clarified the Cisco metric, replaced the Melbourne Airbnb cover with an actual-vs-predicted validation graph, updated Australia/remote availability copy, added the latest-CV-based Data Analyst PDF, and republished the source to GitHub. The full gate passed with 24 Playwright tests and Lighthouse. |
+| P9 data-role refresh | Green | Clarified the Cisco metric, replaced the Melbourne Airbnb cover with an actual-vs-predicted validation graph, updated Australia/remote availability copy, added the latest-CV-based Data Analyst PDF, republished the source to GitHub, and connected the repository to Vercel. The full gate passed with 24 Playwright tests and Lighthouse. |
 
 The final gate ran 24 Playwright tests: 10 content-route smoke checks, 10 axe checks, project filter persistence, honeypot behaviour, sitemap/robots content and OG image responses. The final local Lighthouse run measured Performance 97, Accessibility 100, Best Practices 96, SEO 100 and FCP 760 ms.
 
@@ -66,8 +66,7 @@ See [BLOCKERS.md](./BLOCKERS.md). In priority order: contact provider secrets, p
    - `TURNSTILE_SECRET_KEY` — the Cloudflare Turnstile secret.
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — the public Turnstile site key.
    `NEXT_PUBLIC_SITE_URL` is already set to `https://charlie-pham-ruddy.vercel.app` for Production and Preview.
-2. If continuous Git-based deploys are wanted, connect the private `Bibententen/portfolio` repository to the existing Vercel project. The current production deployment was completed by direct upload.
-3. If a custom domain is bought later, add it in Vercel → Settings → Domains, use the exact A/CNAME records Vercel displays, set `NEXT_PUBLIC_SITE_URL` to the new origin, and redeploy.
-4. Add the published, embeddable Tableau Public URLs and confirm the Power BI work to include before creating the dashboards case study.
-5. Optionally provide credential URLs, dashboard screenshots, case-study dates, precision/recall/F1 for the prostate model, and a verified MapReduce benchmark; each is non-blocking and currently omitted or described honestly.
-6. After adding provider secrets, test a real contact submission to Gmail, a honeypot submission, and the fourth submission within ten minutes; then submit the sitemap to Google Search Console, add the website link to LinkedIn, and do the final word-by-word proofread.
+2. If a custom domain is bought later, add it in Vercel → Settings → Domains, use the exact A/CNAME records Vercel displays, set `NEXT_PUBLIC_SITE_URL` to the new origin, and redeploy.
+3. Add the published, embeddable Tableau Public URLs and confirm the Power BI work to include before creating the dashboards case study.
+4. Optionally provide credential URLs, dashboard screenshots, case-study dates, precision/recall/F1 for the prostate model, and a verified MapReduce benchmark; each is non-blocking and currently omitted or described honestly.
+5. After adding provider secrets, test a real contact submission to Gmail, a honeypot submission, and the fourth submission within ten minutes; then submit the sitemap to Google Search Console, add the website link to LinkedIn, and do the final word-by-word proofread.
