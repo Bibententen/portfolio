@@ -1,0 +1,78 @@
+---
+slug: customer-clustering
+title: Customer Segmentation with K-means++
+outcome: Three segments that told a clothing retailer which customers to design and price for.
+featured: true
+tags:
+  - Python
+  - Machine Learning
+stack:
+  - Python
+  - scikit-learn
+  - pandas
+repo: https://github.com/Bibententen/Projects/tree/main/Customer%20clustering%20project
+glance:
+  problemType: Unsupervised clustering
+  dataset: 2,000 customer records, 7 customer attributes
+  bestModel: K-means++ and agglomerative clustering agreement
+  headline: Three customer segments, with the mid segment recommended first
+---
+
+## The problem
+
+A small clothing store was building a marketing plan without knowing who its customers were. The decision was which segment to focus on.
+
+## The data
+
+The data contained 2,000 customer records with gender, marital status, age, education, income, occupation and settlement size. It was 54.3% male and 45.7% female; 50.3% of customers were single. Most customers were aged 25–40.
+
+Education and occupation added useful context: 69.3% finished high school, 14.6% were undergraduates and 1.8% attended graduate school. Skilled employees or officials represented 55.7%, unemployed or unskilled customers 31.7% and managers 12.7%.
+
+## The approach
+
+The elbow method was used to choose the cluster count. The curve flattened past 4, and 3 was chosen. Two clustering methods then ran independently: K-means++ and agglomerative clustering.
+
+Both methods produced the same three groups with different labels. That agreement is the key technical finding: the segmentation is a property of the customers, not of the algorithm.
+
+## Results
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Segment</th>
+      <th scope="col">Age</th>
+      <th scope="col">Income</th>
+      <th scope="col">Profile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Mid (target)</th>
+      <td>~38</td>
+      <td>~$130,000</td>
+      <td>
+        Male, single, high school, skilled employee/official, small or mid-sized
+        city
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Lower</th>
+      <td>~31</td>
+      <td>~$70,000</td>
+      <td>Female, non-single, high school, unemployed, small city</td>
+    </tr>
+    <tr>
+      <th scope="row">Upper</th>
+      <td>~45</td>
+      <td>~$250,000</td>
+      <td>Highest age and income, smallest group</td>
+    </tr>
+  </tbody>
+</table>
+
+The recommendation is to focus on the mid segment, then the lower. Both are price-sensitive and promotion-responsive, most did not study past high school, and both sit under $130k income. The range should be casual, comfortable and affordable. With gender split near 50/50, keep the range balanced or lean unisex.
+
+## What I would do differently
+
+- I would keep both clustering methods as a cross-check rather than treating one algorithm's labels as the answer.
+- I would use the segment profiles to keep the marketing recommendation connected to the customer data.
