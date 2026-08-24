@@ -31,4 +31,6 @@ jobs:
       - name: Lighthouse CI
         run: npm run lhci
       - name: Check project repository links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run linkcheck
