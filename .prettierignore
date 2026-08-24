@@ -1,0 +1,13 @@
+.next
+node_modules
+public
+playwright-report
+test-results
+coverage
+AGENTS.md
+CODEX_PROMPT.md
+CONTENT.md
+PLAN.md
+BLOCKERS.md
+BUILD_REPORT.md
+*.lock
