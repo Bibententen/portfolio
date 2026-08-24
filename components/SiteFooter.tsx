@@ -27,7 +27,7 @@ export function SiteFooter() {
             ))}
             <li>
               <Link prefetch={false} className="hover:text-text" href="/resume">
-                CV PDF pending
+                Download CV
               </Link>
             </li>
           </ul>
