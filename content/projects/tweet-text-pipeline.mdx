@@ -1,0 +1,52 @@
+---
+slug: tweet-text-pipeline
+title: Distributed Tweet Processing with MapReduce, DASK & NLTK
+outcome: A five-stage NLP pipeline over 10,000 tweets, parallelised with MapReduce and DASK.
+featured: false
+tags:
+  - Python
+  - Big Data
+stack:
+  - Python
+  - MongoDB
+  - MapReduce
+  - DASK
+  - NLTK
+  - gensim
+  - scikit-learn
+repo: https://github.com/Bibententen/Projects/tree/main/MapReduce%20%26%20DASK
+glance:
+  problemType: Distributed text processing
+  dataset: 10,000 tweets read from MongoDB
+  bestModel: MapReduce word count and DASK sorting
+  headline: 22,157 unique word stems across the corpus
+---
+
+## The problem
+
+This is the only distributed-processing project in the portfolio and the strongest evidence for data-engineering work. It processes a tweet corpus into searchable text, frequency, geography, sorting and keyword outputs.
+
+## The data
+
+The pipeline read 10,000 tweets from MongoDB, with text, id and address fields.
+
+## The approach
+
+The five stages were:
+
+1. Clean and enrich: tokenise, strip URLs, numbers and non-alphabetical characters, remove stop words, stem to root form, extract keywords, tag named entities via `nltk.pos_tag`, model topics with a gensim bag-of-words model, and score sentiment with `SentimentIntensityAnalyzer`.
+2. Word frequency: MapReduce word count.
+3. Geography: MapReduce count by city, with explicit fallbacks for no-location, non-Australian and no-city records.
+4. Sorting: group tweets by id and sort, implemented once with MapReduce and once with a hand-written merge sort, then timed against each other.
+5. Keyword ranking: TF-IDF with scikit-learn, then sort parallelised across a 100-partition DASK dataframe.
+
+## Results
+
+The word-count stage found 22,157 unique word stems across the corpus. Perth was the most frequent city at 363 tweets.
+
+The documentation records the MapReduce sort benchmark separately, but that timing is not included here because it has not been verified. DASK is only applied at the sorting step because TF-IDF itself is computed with scikit-learn; the whole pipeline is not described as distributed.
+
+## What I would do differently
+
+- I would re-time the MapReduce and merge-sort comparison properly before using it as a benchmark.
+- I would keep the boundary around DASK explicit: it parallelises the sorting step, while scikit-learn computes TF-IDF.
