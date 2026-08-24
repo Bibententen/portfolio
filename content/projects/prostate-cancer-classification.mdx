@@ -1,0 +1,46 @@
+---
+slug: prostate-cancer-classification
+title: Prostate Cancer Classification
+outcome: 80% accuracy with XGBoost — and three false negatives that matter more than the accuracy figure.
+featured: true
+tags:
+  - Python
+  - Machine Learning
+stack:
+  - Python
+  - XGBoost
+  - scikit-learn
+  - pandas
+repo: https://github.com/Bibententen/Projects/tree/main/Prostate%20Cancer%20Classification
+glance:
+  problemType: Binary classification
+  dataset: 100 biopsies, 10 variables, 62 malignant / 38 benign
+  bestModel: XGBoost
+  headline: 80% accuracy, with 3 false negatives and 3 false positives
+---
+
+## The problem
+
+The task was to classify a biopsy as benign or malignant from tumour measurements. Prostate cancer is the most commonly diagnosed cancer in Australia (~24,200 male diagnoses in 2022) and has one of the highest survival rates when caught early. That makes a false negative much worse than a false positive.
+
+## The data
+
+The dataset contained 100 biopsies and 10 variables: radius, texture, perimeter, area, smoothness, compactness, symmetry, fractal dimension, id and the diagnosis label. There were 62 malignant and 38 benign records.
+
+Missing values were present. Every predictor was numeric, so missing values were filled with the column median. The strongest predictors were perimeter, with 0.60 correlation with diagnosis; area, with 0.53; and compactness, with 0.51.
+
+## The approach
+
+The work used a 70/30 train/test split and compared three classifiers: decision tree, random forest and XGBoost.
+
+## Results
+
+XGBoost was best at 80% accuracy, with 3 false negatives — malignant biopsies predicted as benign — and 3 false positives.
+
+On a 100-row medical dataset with a 62/38 class split, 80% accuracy is a weak claim. The 3 false negatives are the number a reviewer should ask about because a false negative is the expensive error here.
+
+## What I would do differently
+
+- I would tune the classification threshold towards recall.
+- I would use stratified cross-validation instead of a single 70/30 split.
+- I would collect far more data.
