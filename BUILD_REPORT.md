@@ -1,6 +1,6 @@
 # Portfolio build report
 
-Status: complete on `main`, published to the private [Bibententen/portfolio](https://github.com/Bibententen/portfolio) repository, and deployed to Vercel production at [charlie-pham-ruddy.vercel.app](https://charlie-pham-ruddy.vercel.app). The Vercel project is now connected to GitHub so future pushes to `main` create deployments.
+Status: complete on `main`, published to the public [Bibententen/portfolio](https://github.com/Bibententen/portfolio) repository, and deployed to Vercel production at [charlie-pham-ruddy.vercel.app](https://charlie-pham-ruddy.vercel.app). The Vercel project is now connected to GitHub so future pushes to `main` create deployments.
 
 ## Phase results
 
@@ -15,7 +15,7 @@ Status: complete on `main`, published to the private [Bibententen/portfolio](htt
 | P6 SEO + resume | Green locally | Canonicals, JSON-LD, sitemap, robots, OG routes, CI link checker and the Data Analyst CV download route passed. A final static HTML audit confirmed the Projects grid remains present without JavaScript. |
 | P8 launch | Green with follow-up | Production deployment succeeded after upgrading the listed `next-mdx-remote` dependency from 5.0.0 to 6.0.0 for Vercel's security check. The public home, About, Projects, Contact and Resume routes render; sitemap and robots return 200. Search Console, LinkedIn update, live contact delivery and final content sign-off remain for Charlie. |
 | P9 data-role refresh | Green | Clarified the Cisco metric, replaced the Melbourne Airbnb cover with an actual-vs-predicted validation graph, updated Australia/remote availability copy, added the latest-CV-based Data Analyst PDF, republished the source to GitHub, and connected the repository to Vercel. The full gate passed with 24 Playwright tests and Lighthouse. |
-| P10 project-specific GitHub links | Green | Each project detail page now links to its matching MDX file in the private `Bibententen/portfolio` repository. GitHub Actions CI #77 passed the full quality workflow, including all five authenticated project-link checks. |
+| P10 project-specific GitHub links | Green | Each project detail page now links to its matching MDX file in the public `Bibententen/portfolio` repository. GitHub Actions CI #77 passed the full quality workflow, including all five authenticated project-link checks. |
 
 The final gate ran 24 Playwright tests: 10 content-route smoke checks, 10 axe checks, project filter persistence, honeypot behaviour, sitemap/robots content and OG image responses. The final local Lighthouse run measured Performance 97, Accessibility 100, Best Practices 96, SEO 100 and FCP 760 ms.
 
@@ -57,10 +57,10 @@ See [BLOCKERS.md](./BLOCKERS.md). In priority order: contact provider secrets, p
 - Used the Webpack build path for the managed-worker limitation documented above. No dependency outside PLAN.md §1.2 was added.
 - Upgraded the listed `next-mdx-remote` dependency from 5.0.0 to 6.0.0 after Vercel rejected the first production build for its vulnerable-version check; the full gate passed after the lockfile update.
 - Used Vercel Drop for the production upload because GitHub was not connected. Uploaded only a temporary copy of `portfolio`, excluding local dependency/build caches and all sibling workspace directories.
-- Created the dedicated GitHub repository as private because the source includes personal contact details and the CV; the live Vercel site remains public.
-- Pointed each project detail page to the exact matching MDX file in the new private repository. Removed the Melbourne notebook CTA because that notebook is not present in the new repository, avoiding a dead link.
+- Created the dedicated GitHub repository and made it public after auditing the personal information against the committed CV; the live Vercel site remains public.
+- Pointed each project detail page to the exact matching MDX file in the new public repository. Removed the Melbourne notebook CTA because that notebook is not present in the new repository, avoiding a dead link.
 - Kept the PLAN.md Lighthouse performance budget at 95 while using provided-environment collection on shared GitHub runners; synthetic throttling produced repeatable false failures for the same passing production build.
-- Used the authenticated GitHub Contents API for CI link checks because GitHub HTML pages return 404 for private repositories even when the workflow token is present; public-facing links remain standard GitHub URLs.
+- Used the authenticated GitHub Contents API for CI link checks to validate exact repository file paths consistently; public-facing links remain standard GitHub URLs.
 
 ## Exact steps left for Charlie
 
