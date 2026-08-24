@@ -1,0 +1,81 @@
+---
+slug: melbourne-rental-prediction
+title: Predicting Airbnb Rental Prices in Melbourne
+outcome: Ranked 3rd of 20 in the cohort Kaggle competition.
+featured: true
+tags:
+  - Python
+  - Machine Learning
+stack:
+  - Python
+  - scikit-learn
+  - pandas
+  - Jupyter
+repo: https://github.com/Bibententen/Projects/tree/main/Predicting%20house%20rental%20price%20in%20Melbourne
+notebook: BUSA8001-Group-Project-Final.ipynb
+cover: /projects/melbourne-rental-prediction/actual-vs-predicted.png
+coverAlt: Actual and predicted Airbnb nightly prices on the validation split.
+glance:
+  problemType: Supervised regression
+  dataset: 7,000 train / 3,000 test listings, 61 features
+  bestModel: Histogram Gradient Boosting with log1p target
+  headline: MAE A$72.89 · A$50.20 excluding the top 1% of prices
+---
+
+## The problem
+
+Airbnb hosts often need to choose a starting price before they have enough booking history to understand demand. This project turns historical listing data into a pricing model that can support that decision with a data-driven estimate.
+
+## The data
+
+The data contains Melbourne Airbnb listing records with structured, categorical, date, text and multi-item fields: location, property characteristics, host profile, availability windows, review scores, amenities and free-text fields.
+
+The training data contains 7,000 rows and 61 columns. The test data contains 3,000 rows. The work included parsing currency and percentage strings to numerics, splitting free-text `bathrooms` into a count plus shared/private flags, converting `host_since`, `first_review` and `last_review` to age-in-days against a `2022-09-09` reference date, deriving amenity count and 16 amenity indicators, and rare-category grouping before one-hot encoding.
+
+## The approach
+
+The project used two-stage selection. Five models — Ridge, Elastic Net, Random Forest, Extra Trees and Histogram Gradient Boosting — were benchmarked on a 2,000-row subset. The top three were then validated on the full 80/20 split before the winner was trained on all rows.
+
+The final pipeline uses an `AirbnbFeatureEngineer`, numeric and categorical imputation, scaling, one-hot encoding with rare-category grouping, Histogram Gradient Boosting and a `log1p` target transform via `TransformedTargetRegressor`.
+
+## Results
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Model</th>
+      <th scope="col">RMSE</th>
+      <th scope="col">MAE</th>
+      <th scope="col">R²</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Histogram Gradient Boosting</th>
+      <td>356.83</td>
+      <td>72.89</td>
+      <td>0.248</td>
+    </tr>
+    <tr>
+      <th scope="row">Elastic Net</th>
+      <td>386.04</td>
+      <td>84.76</td>
+      <td>0.120</td>
+    </tr>
+    <tr>
+      <th scope="row">Ridge Regression</th>
+      <td>386.86</td>
+      <td>84.90</td>
+      <td>0.117</td>
+    </tr>
+  </tbody>
+</table>
+
+Excluding the top 1% of target prices, the selected model recorded RMSE 96.90 and MAE 50.20.
+
+The R² of 0.248 is low because the price distribution is heavily right-skewed and a handful of extreme listings dominate squared error. That is why the p99-excluded metrics are reported alongside it.
+
+## What I would do differently
+
+- I would keep the honest p99-excluded metrics beside the full validation metrics when discussing model usefulness.
+- I would continue to test how the skewed target distribution affects the business interpretation of a nightly price estimate.
