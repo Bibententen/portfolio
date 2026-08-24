@@ -26,7 +26,7 @@ export function Hero() {
           className="border-border hover:bg-surface rounded-[var(--radius-control)] border px-4 py-3 font-medium"
           href="/resume"
         >
-          CV PDF pending
+          Download CV
         </Link>
       </div>
     </section>
