@@ -15,6 +15,9 @@ stack:
   - gensim
   - scikit-learn
 repo: https://github.com/Bibententen/portfolio/blob/main/content/projects/tweet-text-pipeline.mdx
+notebook: notebooks/tweet-text-pipeline.ipynb
+cover: /projects/tweet-text-pipeline/pipeline.png
+coverAlt: Five-stage distributed NLP pipeline diagram.
 glance:
   problemType: Distributed text processing
   dataset: 10,000 tweets read from MongoDB
@@ -22,40 +25,83 @@ glance:
   headline: 22,157 unique word stems across the corpus
 ---
 
-## The problem
+## Executive summary
 
-This is the only distributed-processing project in the portfolio and the strongest evidence for data-engineering work. It processes a tweet corpus into searchable text, frequency, geography, sorting and keyword outputs.
+A raw tweet corpus is not usable by a comms or social-listening team until it
+is cleaned, indexed and ranked. This project turns 10,000 tweets stored in
+MongoDB into searchable text intelligence through a five-stage pipeline,
+parallelising the genuinely parallel stages with MapReduce and DASK rather
+than distributing the whole thing for its own sake.
 
-## The data
+<Insight title="Key takeaway">
+  The word-count stage found 22,157 unique word stems across the corpus, and
+  Perth was the single most frequent city at 363 tweets — the only geography
+  figure verified precisely enough to report on its own.
+</Insight>
 
-The pipeline read 10,000 tweets from MongoDB, with text, id and address fields.
+## Business problem
 
-## The approach
+A comms, marketing or social-listening team cannot query or trend a raw tweet
+dump. The decision this pipeline supports: **turn unstructured text into a
+structure a downstream search index or dashboard can consume** — word
+frequencies, geography, and ranked keywords, rather than a flat table of
+tweet text.
 
-The five stages were:
+## Data overview
+
+|        |                                                     |
+| ------ | --------------------------------------------------- |
+| Tweets | 10,000                                              |
+| Source | MongoDB collection with text, id and address fields |
+
+## Approach
 
 <PipelineFlow id="tweet-pipeline" title="Five-stage pipeline" />
 
-1. Clean and enrich: tokenise, strip URLs, numbers and non-alphabetical characters, remove stop words, stem to root form, extract keywords, tag named entities via `nltk.pos_tag`, model topics with a gensim bag-of-words model, and score sentiment with `SentimentIntensityAnalyzer`.
-2. Word frequency: MapReduce word count.
-3. Geography: MapReduce count by city, with explicit fallbacks for no-location, non-Australian and no-city records.
-4. Sorting: group tweets by id and sort, implemented once with MapReduce and once with a hand-written merge sort, then timed against each other.
-5. Keyword ranking: TF-IDF with scikit-learn, then sort parallelised across a 100-partition DASK dataframe.
+1. **Clean and enrich** — tokenise, strip URLs, numbers and non-alphabetical
+   characters, remove stop words, stem to root form, extract keywords, tag
+   named entities via `nltk.pos_tag`, model topics with a gensim
+   bag-of-words model, and score sentiment with `SentimentIntensityAnalyzer`.
+2. **Word frequency** — MapReduce word count.
+3. **Geography** — MapReduce count by city, with explicit fallbacks for
+   no-location, non-Australian and no-city records.
+4. **Sorting** — tweets grouped by id and sorted, implemented once with
+   MapReduce and once with a hand-written merge sort, then timed against
+   each other.
+5. **Keyword ranking** — TF-IDF with scikit-learn, then sorted in parallel
+   across a 100-partition DASK dataframe.
 
-<Insight title="Distributed where it matters, simple where it doesn't">
+<Insight title="Key takeaway">
   The design parallelises the genuinely parallel stages (word count, geography,
   sorting) with MapReduce and DASK, while scikit-learn owns the TF-IDF
-  computation. That boundary keeps the engineering honest — the whole pipeline
-  is not oversold as distributed.
+  computation itself. That boundary keeps the engineering honest — the whole
+  pipeline is not oversold as distributed.
 </Insight>
 
 ## Results
 
-The word-count stage found 22,157 unique word stems across the corpus. Perth was the most frequent city at 363 tweets.
+The word-count stage found **22,157 unique word stems** across the corpus.
+Perth was the most frequent city at **363 tweets**. The MapReduce-vs-merge-sort
+timing comparison was run during development but is not reported here because
+it has not been independently re-verified — see What I'd do next.
 
-The documentation records the MapReduce sort benchmark separately, but that timing is not included here because it has not been verified. DASK is only applied at the sorting step because TF-IDF itself is computed with scikit-learn; the whole pipeline is not described as distributed.
+## Recommendation
 
-## What I would do differently
+<Insight title="For the business" tone="success">
+  This pipeline is the groundwork for a searchable tweet index or a geographic
+  trend dashboard — the keyword ranking stage is the natural hand-off point to a
+  downstream analytics or reporting tool, rather than an endpoint in itself.
+</Insight>
 
-- I would re-time the MapReduce and merge-sort comparison properly before using it as a benchmark.
-- I would keep the boundary around DASK explicit: it parallelises the sorting step, while scikit-learn computes TF-IDF.
+## What I'd do next
+
+- Re-time the MapReduce and merge-sort comparison properly before quoting it
+  as a benchmark.
+- Extend the geography stage beyond a single verified top-city figure with a
+  full, re-run city breakdown.
+- Wire the TF-IDF output into an actual downstream search index to prove the
+  hand-off point in practice.
+
+---
+
+**Notebook:** [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/tweet-text-pipeline.ipynb) — connect → clean/enrich → word count → geography → sorting comparison → TF-IDF ranking.

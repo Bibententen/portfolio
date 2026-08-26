@@ -12,6 +12,9 @@ stack:
   - scikit-learn
   - pandas
 repo: https://github.com/Bibententen/portfolio/blob/main/content/projects/prostate-cancer-classification.mdx
+notebook: notebooks/prostate-cancer-classification.ipynb
+cover: /projects/prostate-cancer-classification/confusion-matrix.png
+coverAlt: 80% accuracy stat card showing 3 false negatives and 3 false positives on a 30-sample held-out test.
 glance:
   problemType: Binary classification
   dataset: 100 biopsies, 10 variables, 62 malignant / 38 benign
@@ -19,49 +22,96 @@ glance:
   headline: 80% accuracy, with 3 false negatives and 3 false positives
 ---
 
-## The problem
+## Executive summary
 
-The task was to classify a biopsy as benign or malignant from tumour measurements. Prostate cancer is the most commonly diagnosed cancer in Australia (~24,200 male diagnoses in 2022) and has one of the highest survival rates when caught early. That makes a false negative much worse than a false positive.
+A biopsy classifier is only useful if it fails in the cheap direction. This
+project classifies 100 prostate biopsies as benign or malignant from ten
+tumour measurements, and the headline number to act on is not the 80%
+accuracy — it's that the model produced exactly 3 false negatives (missed
+cancers) against 3 false positives (unnecessary follow-ups) on its held-out
+test set.
 
-## The data
-
-The dataset contained 100 biopsies and 10 variables: radius, texture, perimeter, area, smoothness, compactness, symmetry, fractal dimension, id and the diagnosis label. There were 62 malignant and 38 benign records.
-
-Missing values were present. Every predictor was numeric, so missing values were filled with the column median. The strongest predictors were perimeter, with 0.60 correlation with diagnosis; area, with 0.53; and compactness, with 0.51.
-
-<Insight title="Three predictors carried the signal">
-  Perimeter (0.60), area (0.53) and compactness (0.51) correlated most strongly
-  with the diagnosis. All three are size-and-shape measures of the tumour —
-  consistent with what clinicians expect: larger, more compact masses are more
-  likely malignant.
+<Insight title="Key takeaway">
+  Perimeter, area and compactness — all measures of tumour size and shape — are
+  the strongest predictors, consistent with clinical intuition that larger, more
+  irregular masses are more likely malignant.
 </Insight>
 
-## The approach
+## Clinical / business problem
 
-The work used a 70/30 train/test split and compared three classifiers: decision tree, random forest and XGBoost.
+Prostate cancer is the most commonly diagnosed cancer in Australia (~24,200
+male diagnoses in 2022) and has one of the highest survival rates when caught
+early. That makes the cost of the two error types asymmetric: **a false
+negative delays treatment of a real cancer, while a false positive costs a
+follow-up biopsy.** The decision this model informs is which biopsies get
+flagged for urgent follow-up — so the error profile matters more than the
+overall accuracy figure.
+
+## Data overview
+
+|             |                                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Biopsies    | 100                                                                                                        |
+| Variables   | 10 — radius, texture, perimeter, area, smoothness, compactness, symmetry, fractal dimension, id, diagnosis |
+| Class split | 62 malignant / 38 benign                                                                                   |
+
+Missing values were present across the numeric predictors and were filled
+with the column median.
+
+## Exploratory data analysis
+
+<BarChart
+  id="prostate-top-correlations"
+  title="Strongest predictors of malignancy (correlation)"
+/>
+
+<Insight title="Key takeaway">
+  Perimeter (0.60), area (0.53) and compactness (0.51) correlated most strongly
+  with the diagnosis label. All three are size-and-shape measures of the tumour,
+  which is why they carry the signal ahead of texture or symmetry.
+</Insight>
+
+## Approach
+
+The work used a 70/30 train/test split and compared three classifiers —
+decision tree, random forest and XGBoost — selecting on held-out accuracy
+before inspecting the error profile in detail.
 
 ## Results
 
-XGBoost was best at 80% accuracy. The confusion matrix tells the story the accuracy figure hides:
+XGBoost was the best of the three classifiers at 80% accuracy. On a 100-row
+dataset with a 62/38 class split, a naive always-malignant classifier would
+already score 62% — so the accuracy figure alone is a weak claim, and the
+error counts are the meaningful result:
 
-<ConfusionMatrix
-  id="prostate-xgb"
-  title="XGBoost confusion matrix (30 held-out biopsies)"
-  note="The three false negatives — malignant biopsies predicted benign — are the expensive errors. In a screening context they mean a cancer that was missed."
-/>
-
-On a 100-row medical dataset with a 62/38 class split, 80% accuracy is a weak claim. The 3 false negatives are the number a reviewer should ask about because a false negative is the expensive error here.
-
-<Insight title="80% accuracy is not the headline" tone="warning">
-  With a 62/38 class split, a naive always-malignant classifier would already
-  hit 62% accuracy. The meaningful numbers are the errors: 3 false negatives
-  (missed cancers) and 3 false positives. For a medical use case, tuning the
-  threshold toward recall would trade some false positives for fewer missed
-  cancers — the right trade.
+<Insight title="The errors that matter" tone="warning">
+  30-sample held-out test · 24 correct (80%) · 3 false negatives (missed
+  cancers) · 3 false positives. The full true-positive/true-negative split
+  within those 30 samples is not recoverable from the reported figures, so this
+  case study reports the verified stat-pair rather than a guessed confusion
+  matrix.
 </Insight>
 
-## What I would do differently
+{/* TODO(charlie): replace the stat-pair above with a full ConfusionMatrix component once the real TP/TN split (or the notebook run that produced 80% / 3 FN / 3 FP) is confirmed. Do not fill the matrix from assumed values -- see BLOCKERS.md. */}
 
-- I would tune the classification threshold towards recall.
-- I would use stratified cross-validation instead of a single 70/30 split.
-- I would collect far more data.
+## Recommendation
+
+<Insight title="For the business" tone="success">
+  Because a false negative means a missed cancer, tune the classification
+  threshold to trade some false positives (unnecessary follow-up biopsies) for
+  fewer false negatives, rather than optimising for raw accuracy. Precision and
+  recall, not accuracy, should be the metrics reported to a clinical
+  stakeholder.
+</Insight>
+
+## What I'd do next
+
+- Tune the classification threshold towards recall rather than accuracy.
+- Use stratified cross-validation instead of a single 70/30 split, given the
+  dataset is only 100 rows.
+- Collect more biopsies — at this sample size, a handful of borderline cases
+  can move the accuracy figure by several percentage points.
+
+---
+
+**Notebook:** [`notebooks/prostate-cancer-classification.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/prostate-cancer-classification.ipynb) — load → correlation analysis → train/test split → model comparison → error-profile discussion.

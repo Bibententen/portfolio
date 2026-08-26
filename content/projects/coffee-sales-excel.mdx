@@ -12,6 +12,9 @@ stack:
   - slicers
   - lookups
 repo: https://github.com/Bibententen/portfolio/blob/main/content/projects/coffee-sales-excel.mdx
+notebook: notebooks/coffee-sales-excel.ipynb
+cover: /projects/coffee-sales-excel/dashboard-model.png
+coverAlt: Diagram of three source tables joined into a pivot model driving four linked dashboard views.
 glance:
   problemType: Sales dashboarding
   dataset: "Three raw tables: orders, customers and products"
@@ -19,37 +22,83 @@ glance:
   headline: Four linked views driven by a timeline and three slicers
 ---
 
-## The problem
+## Executive summary
 
-The goal was to turn raw coffee sales tables into an interactive dashboard that could be explored without add-ins.
+A sales team with three flat tables and no self-serve way to explore them
+cannot answer "when do we sell, where, and to whom?" without asking someone to
+build a new report each time. This project turns three raw coffee sales
+tables into an interactive, pivot-backed Excel dashboard that a non-technical
+user can re-cut themselves with a timeline and three slicers — no add-ins,
+no macros.
 
-## The data
-
-The workbook contains three source tables — `orders`, `customers` and `products` — joined with lookups.
-
-## The approach
-
-The `Dashboard` sheet is driven by three pivot-backed views: `TotalSales` over time, `CountryBarChart` and `Top5Customers`. A date timeline controls the period, while slicers cover loyalty-card status, roast type and pack size.
-
-<Insight title="A small data model, not a single spreadsheet">
+<Insight title="Key takeaway">
   Three source tables joined with lookups is a star-schema in miniature: a fact
   table (`orders`) referenced against two dimension tables (`customers`,
-  `products`). The dashboard then reads from pivots built on that model — the
-  same shape a Power BI or Tableau project would take.
+  `products`). The dashboard reads from pivots built on that model — the same
+  shape a Power BI or Tableau project would take.
 </Insight>
+
+## Business problem
+
+The decision this dashboard supports: **let a sales stakeholder explore when,
+where and to whom coffee sells, without waiting on a new report for every
+question.** A static export answers one question; a linked, sliceable
+dashboard answers the next one the moment it's asked.
+
+## Data overview
+
+| Table       | Role                                  |
+| ----------- | ------------------------------------- |
+| `orders`    | Fact table — one row per order        |
+| `customers` | Dimension — loyalty tier and location |
+| `products`  | Dimension — roast type and pack size  |
+
+## Approach
+
+<PipelineFlow id="coffee-pipeline" title="From raw tables to dashboard" />
+
+1. **Source tables** — `orders`, `customers` and `products`, loaded as-is.
+2. **Data model** — `orders` joined to `customers` and `products` via
+   lookups, turning three flat tables into a queryable model.
+3. **Dashboard** — the `Dashboard` sheet reads from pivots built on that
+   model: `TotalSales` over time, `CountryBarChart`, and `Top5Customers`. A
+   date timeline controls the period; three slicers cover loyalty-card
+   status, roast type and pack size.
 
 ## Results
 
-The result is an interactive dashboard with a timeline plus three slicers driving four linked views. That is real dashboard modelling thinking, just in Excel: cleaning, pivots, dashboarding and linked controls.
+The result is four linked views, all re-cuttable from the same three
+slicers and timeline, without touching the underlying tables:
 
 <Insight title="What the four linked views prove" tone="success">
-  TotalSales over time answers "when do we sell?"; the country chart answers
-  "where?"; Top5Customers answers "who?". Three slicers (loyalty, roast, pack
+  `TotalSales` over time answers "when do we sell?"; the country chart answers
+  "where?"; `Top5Customers` answers "who?". Three slicers (loyalty, roast, pack
   size) let every view be re-cut without touching the underlying data — the
-  essence of dashboard design.
+  essence of dashboard design, independent of the tool.
 </Insight>
 
-## What I would do differently
+No sales totals or order counts are quoted here — the original workbook is
+not attached to this repository, so this case study describes the dashboard's
+structure and views rather than inventing figures for them.
 
-- I would export screenshots of the dashboard with the slicers in different states when those assets are available.
-- I would keep the workbook structure visible as evidence of the modelling work behind the dashboard.
+## Recommendation
+
+<Insight title="For the business" tone="success">
+  This structure — fact table plus dimension tables plus slicer-driven views —
+  is directly portable to Power BI or Tableau if the sales team outgrows Excel's
+  row limits or needs scheduled refreshes; the modelling work carries over, only
+  the rendering layer changes.
+</Insight>
+
+## What I'd do next
+
+- Attach the workbook (or screenshots of the dashboard with slicers in
+  different states) so the views can be shown, not just described.
+- Recreate the same aggregations in pandas (see the notebook below) to make
+  the pipeline reviewable outside Excel.
+- Add a measures table if the workbook grows past what native PivotTables
+  can express cleanly.
+
+---
+
+**Notebook:** [`notebooks/coffee-sales-excel.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/coffee-sales-excel.ipynb) — the same joins and aggregations expressed in pandas, as an Excel-to-Python equivalence reference.

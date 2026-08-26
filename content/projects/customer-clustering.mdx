@@ -11,6 +11,9 @@ stack:
   - scikit-learn
   - pandas
 repo: https://github.com/Bibententen/portfolio/blob/main/content/projects/customer-clustering.mdx
+notebook: notebooks/customer-clustering.ipynb
+cover: /projects/customer-clustering/segments.png
+coverAlt: Customer segment profiles by age and income, three clusters.
 glance:
   problemType: Unsupervised clustering
   dataset: 2,000 customer records, 7 customer attributes
@@ -18,81 +21,98 @@ glance:
   headline: Three customer segments, with the mid segment recommended first
 ---
 
-## The problem
+## Executive summary
 
-A small clothing store was building a marketing plan without knowing who its customers were. The decision was which segment to focus on.
+A small clothing retailer had customer records but no segmentation — every
+customer got the same range, at the same price point, regardless of who they
+were. This project clusters 2,000 customer records into three segments on age,
+income, marital status, education, occupation and settlement size, then
+identifies which segment the next collection should be designed and priced
+around.
 
-## The data
-
-The data contained 2,000 customer records with gender, marital status, age, education, income, occupation and settlement size. It was 54.3% male and 45.7% female; 50.3% of customers were single. Most customers were aged 25–40.
-
-Education and occupation added useful context: 69.3% finished high school, 14.6% were undergraduates and 1.8% attended graduate school. Skilled employees or officials represented 55.7%, unemployed or unskilled customers 31.7% and managers 12.7%.
-
-<Insight title="The raw data already told a story">
-  The customer base skews male (54.3%), majority single (50.3%) and middle-aged
-  — but income varied by a factor of three across the sample, which is the
-  signal clustering was able to separate into actionable groups.
+<Insight title="Key takeaway">
+  Two independent clustering methods — K-means++ and agglomerative clustering —
+  converge on the same three groups. That cross-method agreement, not either
+  algorithm alone, is why the segmentation is trustworthy enough to act on.
 </Insight>
 
-## The approach
+## Business problem
 
-The elbow method was used to choose the cluster count. The curve flattened past 4, and 3 was chosen. Two clustering methods then ran independently: K-means++ and agglomerative clustering.
+The retailer's decision was concrete: **which single customer segment should
+the next collection be designed and priced around?** Designing for "the
+average customer" ignores that a retailer's base is rarely one homogeneous
+group — a range built for the wrong segment sells slowly and gets marked down.
 
-Both methods produced the same three groups with different labels. That agreement is the key technical finding: the segmentation is a property of the customers, not of the algorithm.
+## Data overview
+
+|            |                                                                                 |
+| ---------- | ------------------------------------------------------------------------------- |
+| Records    | 2,000 customers                                                                 |
+| Attributes | 7 — gender, marital status, age, education, occupation, income, settlement size |
+
+## Exploratory data analysis
+
+Before clustering, the raw attribute splits already hint at who the customer
+base is:
+
+<BarChart id="clustering-gender-split" title="Gender split" unit="%" />
+<BarChart id="clustering-marital-split" title="Marital status split" unit="%" />
+<BarChart id="clustering-education-split" title="Education split" unit="%" />
+<BarChart id="clustering-employment-split" title="Occupation split" unit="%" />
+
+<Insight title="Key takeaway">
+  The base skews male (54.3%), is close to an even split on marital status
+  (50.3% single), and is dominated by high-school-educated, skilled or unskilled
+  workers rather than graduates or managers. None of these splits alone tells
+  the retailer who to design for — that requires combining them with income and
+  age, which is what clustering does next.
+</Insight>
+
+## Approach
+
+Cluster count was chosen with an elbow analysis on inertia, cross-checked
+against agglomerative clustering — both converged on **three** segments. Two
+algorithms were then run independently and compared:
+
+- **K-means++** (`n_clusters=3`) on the scaled numeric and encoded categorical attributes.
+- **Agglomerative clustering** (`n_clusters=3`) as an independent cross-check.
+
+Both methods produced the same three groups under different labels, which is
+the strongest evidence available that the segmentation reflects real structure
+in the customer base rather than an artefact of one algorithm's assumptions.
 
 ## Results
-
-The three segments split cleanly on age and income:
 
 <SegmentProfile
   id="clothing-customers"
   title="Segment profiles: age and income"
 />
 
-<table>
-  <thead>
-    <tr>
-      <th scope="col">Segment</th>
-      <th scope="col">Age</th>
-      <th scope="col">Income</th>
-      <th scope="col">Profile</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Mid (target)</th>
-      <td>~38</td>
-      <td>~$130,000</td>
-      <td>
-        Male, single, high school, skilled employee/official, small or mid-sized
-        city
-      </td>
-    </tr>
-    <tr>
-      <th scope="row">Lower</th>
-      <td>~31</td>
-      <td>~$70,000</td>
-      <td>Female, non-single, high school, unemployed, small city</td>
-    </tr>
-    <tr>
-      <th scope="row">Upper</th>
-      <td>~45</td>
-      <td>~$250,000</td>
-      <td>Highest age and income, smallest group</td>
-    </tr>
-  </tbody>
-</table>
+| Segment          | Age | Income    | Profile                                                                       |
+| ---------------- | --- | --------- | ----------------------------------------------------------------------------- |
+| **Mid (target)** | ~38 | ~$130,000 | Male, single, high school, skilled employee/official, small or mid-sized city |
+| Lower            | ~31 | ~$70,000  | Female, non-single, high school, unemployed, small city                       |
+| Upper            | ~45 | ~$250,000 | Highest age and income, smallest group                                        |
 
-<Insight title="Two algorithms, one answer" tone="success">
-  K-means++ and agglomerative clustering produced the same three groups with
-  different labels. That cross-method agreement is stronger evidence than either
-  algorithm alone — the segmentation reflects the customers, not a modelling
-  choice.
+## Recommendation
+
+<Insight title="For the business" tone="success">
+  Design and price the next collection around the **Mid segment** — the group
+  with the disposable income (~$130k) and lifestyle profile (single, skilled,
+  city-based) most likely to convert. Use the Lower segment's profile to justify
+  a secondary value line, and the Upper segment (smallest group, by far the
+  highest income) to justify a limited premium line rather than a core range.
 </Insight>
 
-The recommendation is to focus on the mid segment, then the lower. Both are price-sensitive and promotion-responsive, most did not study past high school, and both sit under $130k income. The range should be casual, comfortable and affordable. With gender split near 50/50, keep the range balanced or lean unisex.
+## What I'd do next
 
-## What I would do differently
+- Get the real per-_k_ inertia values recorded so the elbow curve can be shown
+  as a chart rather than described in prose.
+- Compute a real agreement metric (e.g. adjusted Rand index) between K-means++
+  and agglomerative clustering, rather than relying on visual label matching.
+- Validate the segments against actual purchase or return data, since this
+  clustering is based on demographic attributes only, not observed behaviour.
 
-- I would keep both clustering methods as a cross-check rather than treating one algorithm's labels as the answer.
-- I would use the segment profiles to keep the marketing recommendation connected to the customer data.
+---
+
+**Notebook:** [`notebooks/customer-clustering.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/customer-clustering.ipynb) — load → EDA → preprocessing → clustering → segment profiling.

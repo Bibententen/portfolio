@@ -31,15 +31,44 @@ export const barCharts: Record<string, BarDatum[]> = {
     { label: "ElasticNet", value: 84.76, valueLabel: "84.8" },
     { label: "Ridge", value: 84.9, valueLabel: "84.9" },
   ],
+  "prostate-top-correlations": [
+    { label: "Perimeter", value: 0.6, valueLabel: "0.60", highlight: true },
+    { label: "Area", value: 0.53, valueLabel: "0.53" },
+    { label: "Compactness", value: 0.51, valueLabel: "0.51" },
+  ],
+  "clustering-gender-split": [
+    { label: "Male", value: 54.3, valueLabel: "54.3%", highlight: true },
+    { label: "Female", value: 45.7, valueLabel: "45.7%" },
+  ],
+  "clustering-marital-split": [
+    { label: "Single", value: 50.3, valueLabel: "50.3%", highlight: true },
+    { label: "Not single", value: 49.7, valueLabel: "49.7%" },
+  ],
+  // Education categories sum to 85.7% of the sample (69.3 + 14.6 + 1.8); the
+  // 14.3% remainder is an arithmetic derivation, not a supplied figure, and is
+  // labelled "Other / unspecified" rather than invented as a named category.
+  "clustering-education-split": [
+    { label: "High school", value: 69.3, valueLabel: "69.3%", highlight: true },
+    { label: "Undergraduate", value: 14.6, valueLabel: "14.6%" },
+    { label: "Other / unspecified", value: 14.3, valueLabel: "14.3%" },
+    { label: "Graduate", value: 1.8, valueLabel: "1.8%" },
+  ],
+  "clustering-employment-split": [
+    {
+      label: "Skilled employee / official",
+      value: 55.7,
+      valueLabel: "55.7%",
+      highlight: true,
+    },
+    { label: "Unemployed / unskilled", value: 31.7, valueLabel: "31.7%" },
+    { label: "Managers", value: 12.7, valueLabel: "12.7%" },
+  ],
 };
 
 export const confusionMatrices: Record<string, MatrixCell[]> = {
-  "prostate-xgb": [
-    { label: "true neg", count: 11, kind: "tn" },
-    { label: "false pos", count: 3, kind: "fp" },
-    { label: "false neg", count: 3, kind: "fn" },
-    { label: "true pos", count: 13, kind: "tp" },
-  ],
+  // Intentionally empty: the full TP/TN split for the prostate project is not
+  // in the verified fact list (only 80% accuracy, 3 FN, 3 FP, 30-sample held-out
+  // split are known). The case study ships an Insight stat-pair instead.
 };
 
 export const pipelineFlows: Record<string, PipelineStage[]> = {
@@ -52,6 +81,11 @@ export const pipelineFlows: Record<string, PipelineStage[]> = {
     { name: "Geography", detail: "count by city" },
     { name: "Sorting", detail: "MapReduce + merge sort" },
     { name: "Keyword rank", detail: "TF-IDF · DASK sort" },
+  ],
+  "coffee-pipeline": [
+    { name: "Source tables", detail: "orders · customers · products" },
+    { name: "Data model", detail: "lookups joining fact to dimensions" },
+    { name: "Dashboard", detail: "timeline + 3 slicers, 4 linked views" },
   ],
 };
 
