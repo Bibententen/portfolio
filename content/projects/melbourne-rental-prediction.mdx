@@ -198,6 +198,23 @@ ultra-premium outlier listings, not in the typical case a new host will hit.
 - Investigate the high-price segment separately — a two-stage model (typical
   vs premium) may cut the outlier-driven error further.
 
+### Explored: prediction intervals as the priority
+
+<Insight title="Why this one first">
+  Of the three follow-ups above, reporting a **90% prediction interval** (via
+  quantile `HistGradientBoostingRegressor`, α = 0.05 and α = 0.95) is the most
+  valuable next step and the cheapest to build — it reuses the existing feature
+  set and turns the current single-number prediction into an honest range for
+  the host. The seasonality features would need an external events calendar, and
+  the two-stage premium/typical split adds a second model to maintain for an
+  error that's already partly explained by the A$50.20-vs-A$72.89 gap between
+  typical and top-1% listings. The method is worked through in
+  [`notebooks/melbourne-rental-prediction.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/melbourne-rental-prediction.ipynb)
+  — no new interval width is quoted here, because producing one honestly
+  requires re-running against the original competition data, which isn't shipped
+  in this repository.
+</Insight>
+
 ---
 
 **Notebook:** [`notebooks/melbourne-rental-prediction.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/melbourne-rental-prediction.ipynb) — the full load → EDA → feature engineering → model comparison → evaluation pipeline.

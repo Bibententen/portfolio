@@ -102,6 +102,18 @@ it has not been independently re-verified — see What I'd do next.
 - Wire the TF-IDF output into an actual downstream search index to prove the
   hand-off point in practice.
 
+### Explored: a proper timing harness, next
+
+<Insight title="Timing comes before benchmarking">
+  The MapReduce-style sort vs merge-sort comparison should not be quoted as a
+  benchmark until it has been timed properly with a repeated `timeit` harness
+  against the real 10,000-tweet corpus — that harness is set out in
+  [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/tweet-text-pipeline.ipynb),
+  with no timing figure quoted here or there until it's been run for real. The
+  DASK/scikit-learn boundary stays as documented above: DASK parallelises the
+  sort step only, TF-IDF vectorisation runs single-machine.
+</Insight>
+
 ---
 
 **Notebook:** [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/tweet-text-pipeline.ipynb) — connect → clean/enrich → word count → geography → sorting comparison → TF-IDF ranking.

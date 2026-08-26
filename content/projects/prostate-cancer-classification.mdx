@@ -112,6 +112,20 @@ error counts are the meaningful result:
 - Collect more biopsies — at this sample size, a handful of borderline cases
   can move the accuracy figure by several percentage points.
 
+### Explored: threshold tuning and stratified validation
+
+<Insight title="Recall over raw accuracy">
+  Because a false negative means a missed cancer, the next concrete step is
+  tuning the classification threshold using a precision-recall curve rather than
+  accepting the default 0.5 cut-off, paired with stratified 5-fold
+  cross-validation so the reported result doesn't depend on which 30 of the 100
+  biopsies happened to land in the test set. Both methods are set out in
+  [`notebooks/prostate-cancer-classification.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/prostate-cancer-classification.ipynb).
+  No new accuracy, recall, or confusion-matrix figure is reported here — the 80%
+  / 3 false negatives / 3 false positives result above remains the only
+  evaluated outcome.
+</Insight>
+
 ---
 
 **Notebook:** [`notebooks/prostate-cancer-classification.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/prostate-cancer-classification.ipynb) — load → correlation analysis → train/test split → model comparison → error-profile discussion.

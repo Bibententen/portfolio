@@ -37,6 +37,13 @@ These are the remaining items that need Charlie or deployment access. The site i
 - **Needed from Charlie:** provide a real date for each case study if dates should appear.
 - **Site meantime:** the validated MDX schema makes dates optional and the page omits them unless supplied; no date is guessed.
 
+## P2 — coffee dashboard screenshots need the original workbook
+
+- **Blocked:** exporting real dashboard screenshots with the slicers in different filter states.
+- **Page or feature:** `/projects/coffee-sales-excel` "What I'd do next" section and `notebooks/coffee-sales-excel.ipynb`.
+- **Needed from Charlie:** the original `.xlsx` workbook, so screenshots can be captured with the slicers in at least two different states and attached under `public/projects/coffee-sales-excel/`.
+- **Site meantime:** the workbook's table/join/view structure is documented and diagrammed programmatically in the notebook instead; no screenshot is substituted or invented.
+
 ## Workspace cleanup note — accidental untracked copies outside portfolio
 
 - **Blocked:** removal of seven untracked PNG copies accidentally created at `../public/projects/melbourne-rental-prediction/` during P4 setup.
