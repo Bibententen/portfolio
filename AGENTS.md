@@ -61,3 +61,13 @@ This build runs unattended. Charlie is not watching, so "stop and ask" means the
 5. **A failing gate you cannot fix in three attempts**: revert to the last green commit, log what failed and what you tried, and move to the next phase. Do not leave the repo red.
 
 `BLOCKERS.md` is the single place Charlie looks when he comes back. Each entry: what is blocked, which page or feature it affects, exactly what you need from him, and what the site does in the meantime. Keep it current — delete entries as they are resolved.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

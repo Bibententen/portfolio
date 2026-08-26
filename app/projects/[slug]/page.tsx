@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Prose } from "@/components/Prose";
 import { TechChip } from "@/components/TechChip";
+import { mdxComponents } from "@/lib/mdx-components";
 import { getAllProjects } from "@/lib/mdx";
 import { canonicalMetadata, projectJsonLd } from "@/lib/seo";
 
@@ -117,7 +118,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       ) : null}
 
       <Prose className="section-space">
-        <MDXRemote source={project.content} />
+        <MDXRemote source={project.content} components={mdxComponents} />
       </Prose>
 
       <nav

@@ -29,15 +29,36 @@ The dataset contained 100 biopsies and 10 variables: radius, texture, perimeter,
 
 Missing values were present. Every predictor was numeric, so missing values were filled with the column median. The strongest predictors were perimeter, with 0.60 correlation with diagnosis; area, with 0.53; and compactness, with 0.51.
 
+<Insight title="Three predictors carried the signal">
+  Perimeter (0.60), area (0.53) and compactness (0.51) correlated most strongly
+  with the diagnosis. All three are size-and-shape measures of the tumour —
+  consistent with what clinicians expect: larger, more compact masses are more
+  likely malignant.
+</Insight>
+
 ## The approach
 
 The work used a 70/30 train/test split and compared three classifiers: decision tree, random forest and XGBoost.
 
 ## Results
 
-XGBoost was best at 80% accuracy, with 3 false negatives — malignant biopsies predicted as benign — and 3 false positives.
+XGBoost was best at 80% accuracy. The confusion matrix tells the story the accuracy figure hides:
+
+<ConfusionMatrix
+  id="prostate-xgb"
+  title="XGBoost confusion matrix (30 held-out biopsies)"
+  note="The three false negatives — malignant biopsies predicted benign — are the expensive errors. In a screening context they mean a cancer that was missed."
+/>
 
 On a 100-row medical dataset with a 62/38 class split, 80% accuracy is a weak claim. The 3 false negatives are the number a reviewer should ask about because a false negative is the expensive error here.
+
+<Insight title="80% accuracy is not the headline" tone="warning">
+  With a 62/38 class split, a naive always-malignant classifier would already
+  hit 62% accuracy. The meaningful numbers are the errors: 3 false negatives
+  (missed cancers) and 3 false positives. For a medical use case, tuning the
+  threshold toward recall would trade some false positives for fewer missed
+  cancers — the right trade.
+</Insight>
 
 ## What I would do differently
 

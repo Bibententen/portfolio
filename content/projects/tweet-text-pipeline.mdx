@@ -34,11 +34,20 @@ The pipeline read 10,000 tweets from MongoDB, with text, id and address fields.
 
 The five stages were:
 
+<PipelineFlow id="tweet-pipeline" title="Five-stage pipeline" />
+
 1. Clean and enrich: tokenise, strip URLs, numbers and non-alphabetical characters, remove stop words, stem to root form, extract keywords, tag named entities via `nltk.pos_tag`, model topics with a gensim bag-of-words model, and score sentiment with `SentimentIntensityAnalyzer`.
 2. Word frequency: MapReduce word count.
 3. Geography: MapReduce count by city, with explicit fallbacks for no-location, non-Australian and no-city records.
 4. Sorting: group tweets by id and sort, implemented once with MapReduce and once with a hand-written merge sort, then timed against each other.
 5. Keyword ranking: TF-IDF with scikit-learn, then sort parallelised across a 100-partition DASK dataframe.
+
+<Insight title="Distributed where it matters, simple where it doesn't">
+  The design parallelises the genuinely parallel stages (word count, geography,
+  sorting) with MapReduce and DASK, while scikit-learn owns the TF-IDF
+  computation. That boundary keeps the engineering honest — the whole pipeline
+  is not oversold as distributed.
+</Insight>
 
 ## Results
 

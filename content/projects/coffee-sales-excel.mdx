@@ -31,9 +31,23 @@ The workbook contains three source tables — `orders`, `customers` and `product
 
 The `Dashboard` sheet is driven by three pivot-backed views: `TotalSales` over time, `CountryBarChart` and `Top5Customers`. A date timeline controls the period, while slicers cover loyalty-card status, roast type and pack size.
 
+<Insight title="A small data model, not a single spreadsheet">
+  Three source tables joined with lookups is a star-schema in miniature: a fact
+  table (`orders`) referenced against two dimension tables (`customers`,
+  `products`). The dashboard then reads from pivots built on that model — the
+  same shape a Power BI or Tableau project would take.
+</Insight>
+
 ## Results
 
 The result is an interactive dashboard with a timeline plus three slicers driving four linked views. That is real dashboard modelling thinking, just in Excel: cleaning, pivots, dashboarding and linked controls.
+
+<Insight title="What the four linked views prove" tone="success">
+  TotalSales over time answers "when do we sell?"; the country chart answers
+  "where?"; Top5Customers answers "who?". Three slicers (loyalty, roast, pack
+  size) let every view be re-cut without touching the underlying data — the
+  essence of dashboard design.
+</Insight>
 
 ## What I would do differently
 

@@ -31,13 +31,96 @@ The data contains Melbourne Airbnb listing records with structured, categorical,
 
 The training data contains 7,000 rows and 61 columns. The test data contains 3,000 rows. The work included parsing currency and percentage strings to numerics, splitting free-text `bathrooms` into a count plus shared/private flags, converting `host_since`, `first_review` and `last_review` to age-in-days against a `2022-09-09` reference date, deriving amenity count and 16 amenity indicators, and rare-category grouping before one-hot encoding.
 
+<Insight title="Feature engineering was the first model">
+  Parsing currency strings, splitting free-text bathroom fields and deriving
+  amenity indicators took the raw listing from 61 mostly-string columns into a
+  numeric feature space the models could actually use. The derived
+  host-account-age and amenity-count features mattered as much as the raw
+  fields.
+</Insight>
+
+## Exploring the data
+
+The price distribution is heavily right-skewed — most listings sit under A$200/night while a long tail of luxury properties runs into the thousands. That shape drives every modelling choice that follows, including the `log1p` target transform.
+
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/price_distribution.png"
+    alt="Histogram of Melbourne Airbnb nightly prices, heavily right-skewed"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    Nightly price distribution: a long right tail of luxury listings.
+  </figcaption>
+</figure>
+
+Property type and location explain a large share of the variation. Entire-home listings command a clear premium over private and shared rooms, and the city-fringe suburbs cluster at the top of the price map.
+
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/room_type_price.png"
+    alt="Average nightly price by room type"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    Average price by room type: entire homes lead, shared rooms trail.
+  </figcaption>
+</figure>
+
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/location_price_map.png"
+    alt="Map of Melbourne coloured by median listing price"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    Median price by location — the premium suburbs stand out clearly.
+  </figcaption>
+</figure>
+
 ## The approach
 
 The project used two-stage selection. Five models — Ridge, Elastic Net, Random Forest, Extra Trees and Histogram Gradient Boosting — were benchmarked on a 2,000-row subset. The top three were then validated on the full 80/20 split before the winner was trained on all rows.
 
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/model_selection_comparison.png"
+    alt="Model selection comparison across five candidate models"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    Two-stage model selection: five candidates, then the top three on the full
+    split.
+  </figcaption>
+</figure>
+
 The final pipeline uses an `AirbnbFeatureEngineer`, numeric and categorical imputation, scaling, one-hot encoding with rare-category grouping, Histogram Gradient Boosting and a `log1p` target transform via `TransformedTargetRegressor`.
 
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/model_workflow.png"
+    alt="End-to-end pipeline diagram"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    The production pipeline: engineer → impute → scale → encode → boost →
+    inverse-transform.
+  </figcaption>
+</figure>
+
 ## Results
+
+Histogram Gradient Boosting won on every metric. The gap to the linear baselines is stark: roughly 12% better RMSE and 14% better MAE than Elastic Net.
+
+<BarChart
+  id="melbourne-mae"
+  title="Validation MAE by model (A$, lower is better)"
+/>
 
 <table>
   <thead>
@@ -72,7 +155,25 @@ The final pipeline uses an `AirbnbFeatureEngineer`, numeric and categorical impu
 
 Excluding the top 1% of target prices, the selected model recorded RMSE 96.90 and MAE 50.20.
 
-The R² of 0.248 is low because the price distribution is heavily right-skewed and a handful of extreme listings dominate squared error. That is why the p99-excluded metrics are reported alongside it.
+<figure className="project-figure">
+  <img
+    src="/projects/melbourne-rental-prediction/actual-vs-predicted.png"
+    alt="Actual versus predicted nightly prices on the validation split"
+    width={1420}
+    height={808}
+  />
+  <figcaption className="mono text-muted mt-3 text-sm">
+    Actual vs predicted: the model tracks the mid-range well and compresses
+    extremes.
+  </figcaption>
+</figure>
+
+<Insight title="The R² of 0.248 is honest, not disappointing" tone="warning">
+  The price distribution is heavily right-skewed and a handful of extreme
+  listings dominate squared error. That is exactly why the p99-excluded metrics
+  (MAE 50.20) are reported beside the full-validation figures — a single average
+  would hide what the model actually does well.
+</Insight>
 
 ## What I would do differently
 
