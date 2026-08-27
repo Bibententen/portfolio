@@ -14,7 +14,7 @@ stack:
   - NLTK
   - gensim
   - scikit-learn
-repo: https://github.com/Bibententen/portfolio/blob/main/content/projects/tweet-text-pipeline.mdx
+repo: https://github.com/Bibententen/mapreduce-dask-tweet-pipeline
 notebook: notebooks/tweet-text-pipeline.ipynb
 cover: /projects/tweet-text-pipeline/pipeline.png
 coverAlt: Five-stage distributed NLP pipeline diagram.
@@ -108,7 +108,7 @@ it has not been independently re-verified — see What I'd do next.
   The MapReduce-style sort vs merge-sort comparison should not be quoted as a
   benchmark until it has been timed properly with a repeated `timeit` harness
   against the real 10,000-tweet corpus — that harness is set out in
-  [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/tweet-text-pipeline.ipynb),
+  [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/mapreduce-dask-tweet-pipeline/blob/master/next-steps.ipynb),
   with no timing figure quoted here or there until it's been run for real. The
   DASK/scikit-learn boundary stays as documented above: DASK parallelises the
   sort step only, TF-IDF vectorisation runs single-machine.
@@ -116,4 +116,4 @@ it has not been independently re-verified — see What I'd do next.
 
 ---
 
-**Notebook:** [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/portfolio/blob/main/notebooks/tweet-text-pipeline.ipynb) — connect → clean/enrich → word count → geography → sorting comparison → TF-IDF ranking.
+**Notebook:** [`next-steps.ipynb`](https://github.com/Bibententen/mapreduce-dask-tweet-pipeline/blob/master/next-steps.ipynb) — connect → clean/enrich → word count → geography → sorting comparison → TF-IDF ranking.
