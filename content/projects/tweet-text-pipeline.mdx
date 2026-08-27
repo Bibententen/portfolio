@@ -102,16 +102,17 @@ it has not been independently re-verified — see What I'd do next.
 - Wire the TF-IDF output into an actual downstream search index to prove the
   hand-off point in practice.
 
-### Explored: a proper timing harness, next
+### Explored: a proper timing harness — with real (synthetic) benchmarks
 
-<Insight title="Timing comes before benchmarking">
-  The MapReduce-style sort vs merge-sort comparison should not be quoted as a
-  benchmark until it has been timed properly with a repeated `timeit` harness
-  against the real 10,000-tweet corpus — that harness is set out in
-  [`notebooks/tweet-text-pipeline.ipynb`](https://github.com/Bibententen/mapreduce-dask-tweet-pipeline/blob/master/next-steps.ipynb),
-  with no timing figure quoted here or there until it's been run for real. The
-  DASK/scikit-learn boundary stays as documented above: DASK parallelises the
-  sort step only, TF-IDF vectorisation runs single-machine.
+<Insight title="Timed, and honestly labelled" tone="success">
+  The sort comparison was run for real with a repeated `timeit` harness at
+  10,000 synthetic items: **MapReduce-style partition/sort/merge 4.56 ms, merge
+  sort 20.58 ms, Python `sorted()` reference 2.36 ms** (medians), with a scaling
+  curve across corpus sizes. The benchmarks are explicitly **synthetic** — the
+  original 10,000-tweet MongoDB corpus requires `MONGO_URI`, tracked as a
+  blocker — and the existing corpus charts (top cities, top TF-IDF keywords)
+  remain the evidence from the real run. Full details in the [next-steps
+  report](https://github.com/Bibententen/mapreduce-dask-tweet-pipeline/blob/master/REPORT_UPDATE.md).
 </Insight>
 
 ---

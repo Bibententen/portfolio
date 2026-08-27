@@ -198,23 +198,22 @@ ultra-premium outlier listings, not in the typical case a new host will hit.
 - Investigate the high-price segment separately — a two-stage model (typical
   vs premium) may cut the outlier-driven error further.
 
-### Explored: prediction intervals as the priority
+### Explored: prediction intervals as the priority — with real results
 
-<Insight title="Why this one first">
-  Of the three follow-ups above, reporting a **90% prediction interval** (via
-  quantile `HistGradientBoostingRegressor`, α = 0.05 and α = 0.95) is the most
-  valuable next step and the cheapest to build — it reuses the existing feature
-  set and turns the current single-number prediction into an honest range for
-  the host. The seasonality features would need an external events calendar, and
-  the two-stage premium/typical split adds a second model to maintain for an
-  error that's already partly explained by the A$50.20-vs-A$72.89 gap between
-  typical and top-1% listings. The method is worked through in
-  [`notebooks/melbourne-rental-prediction.ipynb`](https://github.com/Bibententen/melbourne-rental-prediction/blob/master/BUSA8001-Group-Project-Final.ipynb)
-  — no new interval width is quoted here, because producing one honestly
-  requires re-running against the original competition data, which isn't shipped
-  in this repository.
+<Insight title="What the follow-up actually found" tone="success">
+  All three next steps were run for real against the labelled training data. The
+  90 per cent quantile interval (α = 0.05 / 0.95 on the same log1p target)
+  covered only **74.2 per cent** of the holdout — useful risk context, but not
+  yet honest enough to promise as a calibrated 90 per cent range. The two-stage
+  premium/typical split slightly *worsened* MAE (A$76.32 vs A$75.74 baseline),
+  and with only 61 premium-fitting examples the extra complexity is not
+  justified. Date features moved MAE by just −A$0.08, with a confidence interval
+  spanning zero. **Recommendation: keep the single pricing model, show
+  uncertainty with an explicit calibration warning, and keep human review for
+  premium listings.** Full numbers and charts in the [next-steps
+  report](https://github.com/Bibententen/melbourne-rental-prediction/blob/master/REPORT_UPDATE.md).
 </Insight>
 
 ---
 
-**Notebook:** [`BUSA8001-Group-Project-Final.ipynb`](https://github.com/Bibententen/melbourne-rental-prediction/blob/master/BUSA8001-Group-Project-Final.ipynb) — the full load → EDA → feature engineering → model comparison → evaluation pipeline. See also the next-steps companion notebook.
+**Notebook:** [`BUSA8001-Group-Project-Final.ipynb`](https://github.com/Bibententen/melbourne-rental-prediction/blob/master/BUSA8001-Group-Project-Final.ipynb) — the full load → EDA → feature engineering → model comparison → evaluation pipeline. See also the [next-steps companion notebook](https://github.com/Bibententen/melbourne-rental-prediction/blob/master/next-steps.ipynb).

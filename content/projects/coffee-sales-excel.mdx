@@ -99,17 +99,21 @@ structure and views rather than inventing figures for them.
 - Add a measures table if the workbook grows past what native PivotTables
   can express cleanly.
 
-### Explored: the structure, documented now — screenshots, pending
+### Explored: the structure documented AND the numbers published — screenshots still pending
 
-<Insight title="Structure is reproducible now">
-  The workbook's table/join/view structure is now documented and
-  programmatically diagrammed in
-  [`notebooks/coffee-sales-excel.ipynb`](https://github.com/Bibententen/coffee-sales-excel-dashboard/blob/master/next-steps.ipynb)
-  — 3 source tables joined into one data model, feeding the 4 dashboard views
-  and the 3 slicers. Exporting real dashboard screenshots with the slicers in
-  different states is still outstanding and needs the original workbook, which
-  isn't in this repository; tracked as a TODO for Charlie rather than
-  substituted with an invented screenshot.
+<Insight title="Real figures, first time published" tone="success">
+  The workbook's joins and aggregations were rebuilt in pandas and **the
+  first-ever sales figures from this data were published**: revenue **45,134
+  (workbook currency — no A$ label in the source)**, 957 orders / 1,000 lines,
+  913 customers, date range 2019-01-02 to 2022-08-19, average order value 47.16.
+  **The United States drives 79.0% of revenue** while the top five customers
+  account for only 3.3% — so account strategy should not focus on a handful of
+  buyers. Loyalty-card holders showed a *lower* observed AOV (45.08 vs 49.12);
+  that is observational, not causal. Charts (revenue over time, by country, top
+  customers, loyalty comparison) are in the [next-steps
+  report](https://github.com/Bibententen/coffee-sales-excel-dashboard/blob/master/REPORT_UPDATE.md).
+  Exporting real dashboard screenshots with the slicers in different states is
+  still outstanding and tracked as a TODO for Charlie.
 </Insight>
 
 ---
